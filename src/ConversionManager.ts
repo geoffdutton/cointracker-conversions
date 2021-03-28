@@ -5,6 +5,7 @@ import createCliQuestionnaire, {
 } from './models/CliQuestionnaire'
 import { BlockchainDotComCsv } from './models/BlockchainDotComCsv'
 import { ConvertibleCsv } from './models/ConvertibleCsv'
+import { BlockFiCsv } from './models/BlockFiCsv'
 
 export interface ConversionManagerOptions {
   fileToConvert: string
@@ -37,6 +38,9 @@ export class ConversionManager {
     switch (exchange) {
       case 'blockchain.com':
         csvConverter = new BlockchainDotComCsv(this.fileToConvert, TIMEZONE)
+        break
+      case 'BlockFi':
+        csvConverter = new BlockFiCsv(this.fileToConvert, TIMEZONE)
         break
     }
 

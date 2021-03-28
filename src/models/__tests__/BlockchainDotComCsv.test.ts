@@ -48,8 +48,8 @@ describe('blockchain.com', () => {
     })
   })
 
-  test('received transaction', async () => {
-    const trx = await testee.processRow({
+  test('received transaction', () => {
+    const trx = testee.processRow({
       date: '12/31/2020',
       time: '02:11:01 GMT +00:00',
       token: 'BTC',
@@ -64,8 +64,8 @@ describe('blockchain.com', () => {
     })
   })
 
-  test('received transaction amount defaults to 0', async () => {
-    const trx = await testee.processRow({
+  test('received transaction amount defaults to 0', () => {
+    const trx = testee.processRow({
       date: '12/31/2020',
       time: '02:11:01 GMT +00:00',
       token: 'BTC',
@@ -80,8 +80,8 @@ describe('blockchain.com', () => {
     })
   })
 
-  test('rejects unexpected row.type', async () => {
-    await expect(
+  test('rejects unexpected row.type', () => {
+    expect(() =>
       testee.processRow(({
         date: '12/31/2020',
         time: '02:11:01 GMT +00:00',
@@ -89,7 +89,7 @@ describe('blockchain.com', () => {
         amount: '0.054545',
         type: 'wrong'
       } as unknown) as BlockchainDotComCsvRow)
-    ).rejects.toThrowError('Unexpected transaction type: wrong')
+    ).toThrowError('Unexpected transaction type: wrong')
   })
 
   describe('convert()', () => {
@@ -179,9 +179,9 @@ describe('blockchain.com', () => {
 
     test('processRow() error', async () => {
       testee = new BlockchainDotComCsv(sourceFile, timezone)
-      testee.processRow = jest
-        .fn()
-        .mockRejectedValue(new Error('Cannot read property blah of undefined'))
+      testee.processRow = jest.fn().mockImplementationOnce(() => {
+        throw new Error('Cannot read property blah of undefined')
+      })
 
       await expect(testee.convert()).rejects.toThrowError(
         'Cannot read property blah of undefined'

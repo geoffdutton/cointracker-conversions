@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon'
 import { ConvertibleCsv, CsvRow } from './ConvertibleCsv'
 import { VALID_EXCHANGE } from '../types'
-import ConvertibleCsvStream from './ConvertibleCsvStream'
 import { CoinTrackerTransaction } from './CoinTrackerTransaction'
 
 export interface BlockchainDotComCsvRow extends CsvRow {
@@ -19,27 +18,6 @@ export class BlockchainDotComCsv extends ConvertibleCsv {
 
   constructor(sourceFileName: string, timezone: string) {
     super(sourceFileName, BlockchainDotComCsv.exchangeName, timezone)
-  }
-
-  convert(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const stream = new ConvertibleCsvStream(this.sourceFileName)
-      stream
-        .on('data', async (row) => {
-          try {
-            const trx = await this.processRow(row)
-            this.writeTransactionRow(trx)
-          } catch (e) {
-            reject(e)
-          }
-        })
-        .on('error', (err) => reject(err))
-        .on('end', () => {
-          this.outputStream.end(() => resolve())
-        })
-
-      stream.init()
-    })
   }
 
   getDate(row: BlockchainDotComCsvRow): string {
@@ -64,9 +42,7 @@ export class BlockchainDotComCsv extends ConvertibleCsv {
     return Math.abs(number)
   }
 
-  async processRow(
-    row: BlockchainDotComCsvRow
-  ): Promise<CoinTrackerTransaction> {
+  processRow(row: BlockchainDotComCsvRow): CoinTrackerTransaction {
     const trx: CoinTrackerTransaction = {
       date: this.getDate(row)
     }
