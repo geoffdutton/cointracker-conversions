@@ -1,0 +1,48 @@
+{
+  "name": "ts-node-cli-boilerplate",
+  "version": "0.1.0",
+  "description": "starter for Node CLIs with TS",
+  "main": "dist/index.js",
+  "bin": "bin/cli.js",
+  "files": [
+    "package.json",
+    "dist/",
+    "bin/",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc --watch",
+    "test": "jest",
+    "test:watch": "nodemon --exec \"npm test\" --watch src --watch __tests__",
+    "lint": "eslint src __tests__ bin",
+    "preversion": "npm run lint && npm run build && npm test",
+    "postversion": "git push && git push --tags && npm publish",
+    "exec": "./bin/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sam-parsons/ts-node-cli-boilerplate.git"
+  },
+  "author": "Sam Parsons <samparsons269@gmail.com> (http://sam-parsons.github.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sam-parsons/ts-node-cli-boilerplate/issues"
+  },
+  "homepage": "https://github.com/sam-parsons/ts-node-cli-boilerplate#readme",
+  "devDependencies": {
+    "@babel/core": "7.13.10",
+    "@babel/preset-env": "7.13.10",
+    "@babel/preset-typescript": "7.13.0",
+    "@typescript-eslint/eslint-plugin": "4.17.0",
+    "@typescript-eslint/parser": "4.17.0",
+    "babel-jest": "26.6.3",
+    "babel-loader": "8.0.0",
+    "eslint": "^7.0.0",
+    "eslint-config-prettier": "8.1.0",
+    "jest": "26.6.3",
+    "nodemon": "^1.11.0",
+    "prettier": "2.2.1",
+    "typescript": "4.2.3"
+  }
+}
