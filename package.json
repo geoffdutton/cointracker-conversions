@@ -17,13 +17,13 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "npm run clean && tsc",
     "buildtest": "tsc --noEmit",
     "clean": "rm -rf ./dist",
     "start": "tsc --watch",
     "test": "npm run lint && jest --coverage",
     "test:watch": "jest --watch",
-    "lint": "npm run buildtest && eslint --fix *.js \"src/**/*\" bin",
+    "lint": "npm run buildtest && eslint --fix *.js src bin",
     "preversion": "npm run lint && npm run build && npm test",
     "postversion": "git push && git push --tags && npm publish",
     "exec": "./bin/cli.js"
@@ -51,6 +51,7 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "minimist": "^1.2.5"
+    "minimist": "^1.2.5",
+    "prompts": "^2.4.0"
   }
 }
