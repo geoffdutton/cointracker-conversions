@@ -11,16 +11,19 @@
     "!dist/**/*.test.js",
     "!dist/*.test.js.map",
     "!dist/**/*.test.js.map",
-    "!dist/**/__mcoks__/**",
+    "!dist/__mocks__/**",
+    "!dist/**/__mocks__/**",
     "bin/",
     "README.md"
   ],
   "scripts": {
     "build": "tsc",
+    "buildtest": "tsc --noEmit",
+    "clean": "rm -rf ./dist",
     "start": "tsc --watch",
     "test": "npm run lint && jest --coverage",
     "test:watch": "jest --watch",
-    "lint": "eslint --fix *.js \"src/**/*\" bin",
+    "lint": "npm run buildtest && eslint --fix *.js \"src/**/*\" bin",
     "preversion": "npm run lint && npm run build && npm test",
     "postversion": "git push && git push --tags && npm publish",
     "exec": "./bin/cli.js"
