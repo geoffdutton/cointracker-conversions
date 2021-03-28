@@ -122,7 +122,7 @@ describe('blockchain.com', () => {
       mockFsCreateWriteStream = fs.createWriteStream as jest.Mock
       mockFsCreateWriteStream.mockImplementationOnce(() => {
         writeStream.write = jest.fn((chunk?, cb?) => {
-          chunksWritten.push(Buffer.from(chunk).toString('utf8'))
+          chunksWritten.push(Buffer.from(chunk).toString('utf8').trim())
           cb && cb(null)
         }) as jest.Mock
         return writeStream
@@ -157,14 +157,10 @@ describe('blockchain.com', () => {
       expect(chunksWritten).toMatchInlineSnapshot(`
       Array [
         "Date,Received Quantity,Received Currency,Sent Quantity,Sent Currency,Fee Amount,Fee Currency,Tag",
-        "
-      10/17/2020 10:34:56,,,0.03897608,BTC,,,",
-        "
-      10/17/2020 09:25:37,0.01385318,BTC,,,,,",
-        "
-      10/17/2020 09:25:37,0.01770809,BTC,,,,,",
-        "
-      10/13/2020 23:25:04,0.00741481,BTC,,,,,",
+        "10/17/2020 10:34:56,,,0.03897608,BTC,,,",
+        "10/17/2020 09:25:37,0.01385318,BTC,,,,,",
+        "10/17/2020 09:25:37,0.01770809,BTC,,,,,",
+        "10/13/2020 23:25:04,0.00741481,BTC,,,,,",
       ]
     `)
     })
