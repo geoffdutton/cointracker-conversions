@@ -1,48 +1,46 @@
 {
-  "name": "ts-node-cli-boilerplate",
-  "version": "0.1.0",
-  "description": "starter for Node CLIs with TS",
+  "name": "cointracker-conversions",
+  "version": "0.0.1",
+  "description": "CLI tool for converting transaction and trade history exports from various exchanges into the proper CoinTracker.io format",
   "main": "dist/index.js",
   "bin": "bin/cli.js",
   "files": [
     "package.json",
     "dist/",
+    "!dist/**/*.test.js",
     "bin/",
     "README.md"
   ],
   "scripts": {
     "build": "tsc",
     "start": "tsc --watch",
-    "test": "jest",
-    "test:watch": "nodemon --exec \"npm test\" --watch src --watch __tests__",
-    "lint": "eslint src __tests__ bin",
+    "test": "npm run lint && jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint --fix *.js \"src/**/*\" bin",
     "preversion": "npm run lint && npm run build && npm test",
     "postversion": "git push && git push --tags && npm publish",
     "exec": "./bin/cli.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sam-parsons/ts-node-cli-boilerplate.git"
+    "url": "git+https://github.com/geoffdutton/cointracker-conversions.git"
   },
-  "author": "Sam Parsons <samparsons269@gmail.com> (http://sam-parsons.github.io/)",
+  "author": "Geoff Dutton <g.dutton@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sam-parsons/ts-node-cli-boilerplate/issues"
+    "url": "https://github.com/geoffdutton/cointracker-conversions/issues"
   },
-  "homepage": "https://github.com/sam-parsons/ts-node-cli-boilerplate#readme",
+  "homepage": "https://github.com/geoffdutton/cointracker-conversions#readme",
   "devDependencies": {
-    "@babel/core": "7.13.10",
-    "@babel/preset-env": "7.13.10",
-    "@babel/preset-typescript": "7.13.0",
+    "@types/jest": "^26.0.22",
     "@typescript-eslint/eslint-plugin": "4.17.0",
     "@typescript-eslint/parser": "4.17.0",
-    "babel-jest": "26.6.3",
-    "babel-loader": "8.0.0",
     "eslint": "^7.0.0",
     "eslint-config-prettier": "8.1.0",
     "jest": "26.6.3",
     "nodemon": "^1.11.0",
     "prettier": "2.2.1",
+    "ts-jest": "^26.5.4",
     "typescript": "4.2.3"
   }
 }

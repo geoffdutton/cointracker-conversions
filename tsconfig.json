@@ -1,6 +1,12 @@
 {
   "rootDir": "src",
   "compilerOptions": {
-    "outDir": "dist"
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "strict": true,
+    "target": "ES2017"
   }
 }
