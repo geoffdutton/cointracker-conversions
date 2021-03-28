@@ -2,4 +2,6 @@
 
 const lib = require('../dist/index.js').default
 
-console.log('lib return value', lib(process.argv[2]))
+lib(require('minimist')(process.argv.slice(2))).then((result) =>
+  console.log('lib return value', result)
+)

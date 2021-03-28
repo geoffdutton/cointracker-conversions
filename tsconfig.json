@@ -2,10 +2,11 @@
   "rootDir": "src",
   "compilerOptions": {
     "esModuleInterop": true,
-    "sourceMap": true,
-    "outDir": "dist",
-    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "sourceMap": true,
     "strict": true,
     "target": "ES2017"
   }

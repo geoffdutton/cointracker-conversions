@@ -1,6 +1,6 @@
-# ts-node-cli-boilerplate
+# CodeTracker.io Conversion Utility
 
-> Boilerplate for quickly creating a Node.js CLI with TypeScript, Jest, and CI with Github Actions.
+> Unofficial [cointracker.io](https://www.cointracker.io/) transaction and trade history converter.
 
 ## Getting started
 
