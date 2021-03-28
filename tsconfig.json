@@ -1,13 +1,17 @@
 {
-  "rootDir": "src",
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test.ts", "src/__mocks__/*"],
+  "rootDir": ".",
   "compilerOptions": {
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
     "moduleResolution": "node",
+    "noUnusedLocals": true,
     "outDir": "dist",
     "sourceMap": true,
     "strict": true,
+    "strictNullChecks": true,
     "target": "ES2017"
   }
 }

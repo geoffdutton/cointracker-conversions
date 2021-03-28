@@ -1,5 +1,3 @@
-import path from 'path'
-
 export interface CliArguments {
   fileToConvert: string
 }
@@ -15,6 +13,6 @@ export default function (rawArgs: CliArgumentsRaw): CliArguments {
   }
 
   return {
-    fileToConvert: path.resolve(__dirname, '..', fileName)
+    fileToConvert: fileName
   }
 }
