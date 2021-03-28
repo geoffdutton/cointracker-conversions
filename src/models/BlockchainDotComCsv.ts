@@ -4,7 +4,7 @@ import { VALID_EXCHANGE } from '../types'
 import ConvertibleCsvStream from './ConvertibleCsvStream'
 import { CoinTrackerTransaction } from './CoinTrackerTransaction'
 
-interface BlockchainDotComCsvRow extends CsvRow {
+export interface BlockchainDotComCsvRow extends CsvRow {
   // 10/17/2020
   date: string
   // 15:34:56 GMT +00:00
@@ -55,6 +55,15 @@ export class BlockchainDotComCsv extends ConvertibleCsv {
     return d.toFormat('LL/dd/yyyy HH:mm:ss')
   }
 
+  protected parseNumber(numberLike: string): number {
+    const number = super.parseNumber(numberLike)
+    if (!number) {
+      return 0
+    }
+
+    return Math.abs(number)
+  }
+
   async processRow(
     row: BlockchainDotComCsvRow
   ): Promise<CoinTrackerTransaction> {
@@ -65,12 +74,14 @@ export class BlockchainDotComCsv extends ConvertibleCsv {
     const type = row.type
     if (type === 'sent') {
       trx.sentCurrency = row.token
-      trx.sentQuantity = Math.abs(this.parseNumber(row.amount) ?? 0)
+      trx.sentQuantity = this.parseNumber(row.amount)
     } else if (type === 'received') {
       trx.receivedCurrency = row.token
-      trx.receivedQuantity = this.parseNumber(row.amount) ?? 0
+      trx.receivedQuantity = this.parseNumber(row.amount)
+    } else {
+      console.log(trx)
+      throw new Error(`Unexpected transaction type: ${type}`)
     }
-
     console.log(trx)
     return trx
   }

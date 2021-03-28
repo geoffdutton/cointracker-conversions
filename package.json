@@ -21,7 +21,7 @@
     "buildtest": "tsc --noEmit",
     "clean": "rm -rf ./dist",
     "start": "tsc --watch",
-    "test": "npm run lint && jest --coverage",
+    "test": "npm run lint && jest --coverage --runInBand",
     "test:watch": "jest --watch",
     "lint": "npm run buildtest && eslint --fix *.js src bin",
     "preversion": "npm run lint && npm run build && npm test",

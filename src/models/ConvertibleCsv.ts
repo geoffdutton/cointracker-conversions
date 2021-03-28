@@ -73,8 +73,9 @@ export abstract class ConvertibleCsv {
 }
 
 export default function createConvertibleCsv<T extends ConvertibleCsv>(
-  csvType: new (sourceFileName: string) => T,
-  sourceFileName: string
+  csvType: new (sourceFileName: string, timezone: string) => T,
+  sourceFileName: string,
+  timezone: string
 ): T {
-  return new csvType(sourceFileName)
+  return new csvType(sourceFileName, timezone)
 }
