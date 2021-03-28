@@ -32,8 +32,8 @@ describe('blockchain.com', () => {
     testee = new BlockchainDotComCsv(sourceFile, timezone)
   })
 
-  test('combines date and time fields', async () => {
-    const trx = await testee.processRow({
+  test('combines date and time fields', () => {
+    const trx = testee.processRow({
       date: '10/17/2020',
       time: '15:34:56 GMT +00:00',
       token: 'BTC',
