@@ -109,6 +109,10 @@ export abstract class ConvertibleCsv {
 
     return isNaN(returnNumber) ? null : returnNumber
   }
+
+  protected parseAbsoluteValueOrZero(numberLike: string): number {
+    return Math.abs(this.parseNumber(numberLike) ?? 0)
+  }
 }
 
 export default function createConvertibleCsv<T extends ConvertibleCsv>(

@@ -33,15 +33,6 @@ export class BlockchainDotComCsv extends ConvertibleCsv {
     return d.toFormat('LL/dd/yyyy HH:mm:ss')
   }
 
-  protected parseNumber(numberLike: string): number {
-    const number = super.parseNumber(numberLike)
-    if (!number) {
-      return 0
-    }
-
-    return Math.abs(number)
-  }
-
   processRow(row: BlockchainDotComCsvRow): CoinTrackerTransaction {
     const trx: CoinTrackerTransaction = {
       date: this.getDate(row)
@@ -50,15 +41,15 @@ export class BlockchainDotComCsv extends ConvertibleCsv {
     const type = row.type
     if (type === 'sent') {
       trx.sentCurrency = row.token
-      trx.sentQuantity = this.parseNumber(row.amount)
+      trx.sentQuantity = this.parseAbsoluteValueOrZero(row.amount)
     } else if (type === 'received') {
       trx.receivedCurrency = row.token
-      trx.receivedQuantity = this.parseNumber(row.amount)
+      trx.receivedQuantity = this.parseAbsoluteValueOrZero(row.amount)
     } else {
       console.log(trx)
       throw new Error(`Unexpected transaction type: ${type}`)
     }
-    console.log(trx)
+
     return trx
   }
 }

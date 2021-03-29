@@ -37,15 +37,6 @@ export class BlockFiCsv extends ConvertibleCsv {
     return d.toFormat('LL/dd/yyyy HH:mm:ss')
   }
 
-  protected parseNumber(numberLike: string): number {
-    const number = super.parseNumber(numberLike)
-    if (!number) {
-      return 0
-    }
-
-    return Math.abs(number)
-  }
-
   processRow(row: BlockFiCsvRow): CoinTrackerTransaction | null {
     const trx: CoinTrackerTransaction = {
       date: this.getDate(row)
@@ -54,7 +45,7 @@ export class BlockFiCsv extends ConvertibleCsv {
     const type = row.transactionType
     if (type === 'Withdrawal Fee') {
       trx.feeCurrency = row.cryptocurrency
-      trx.feeAmount = this.parseNumber(row.amount)
+      trx.feeAmount = this.parseAbsoluteValueOrZero(row.amount)
       this.pendingFees[trx.date] = trx
       return null
     }
@@ -63,7 +54,7 @@ export class BlockFiCsv extends ConvertibleCsv {
 
     if (type === 'Withdrawal') {
       trx.sentCurrency = row.cryptocurrency
-      trx.sentQuantity = this.parseNumber(row.amount)
+      trx.sentQuantity = this.parseAbsoluteValueOrZero(row.amount)
       if (matchingFeeTrx) {
         if (typeof matchingFeeTrx.feeAmount === 'number') {
           trx.sentQuantity += matchingFeeTrx.feeAmount
@@ -73,12 +64,12 @@ export class BlockFiCsv extends ConvertibleCsv {
       }
     } else if (['Deposit', 'Interest Payment'].includes(type)) {
       trx.receivedCurrency = row.cryptocurrency
-      trx.receivedQuantity = this.parseNumber(row.amount)
+      trx.receivedQuantity = this.parseAbsoluteValueOrZero(row.amount)
       if (type === 'Interest Payment') {
         trx.tag = 'Interest'
       }
     }
-    console.log(trx)
+
     return trx
   }
 }
