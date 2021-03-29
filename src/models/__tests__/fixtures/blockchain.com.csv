@@ -1,0 +1,5 @@
+date,time,token,type,amount,value_then,value_now,exchange_rate_then,tx,note
+2020-10-17,15:34:56 GMT +00:00,BTC,sent,-0.03897608,"$ -442.50","$ -2,179.89","$ 11,353.18",ajifoeji,
+2020-10-17,14:25:37 GMT +00:00,BTC,received,0.01385318,"$ 157.10","$ 774.79","$ 11,340.00",aiojfiowe,
+2020-10-17,14:25:37 GMT +00:00,BTC,received,0.01770809,"$ 200.81","$ 990.40","$ 11,340.00",aifjoiew,
+2020-10-14,04:25:04 GMT +00:00,BTC,received,0.00741481,"$ 84.67","$ 414.70","$ 11,418.95",aifojew,

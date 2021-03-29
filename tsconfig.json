@@ -1,6 +1,6 @@
 {
   "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.ts", "src/__mocks__/*"],
+  "exclude": ["src/**/*.test.ts", "src/__mocks__/*", "**/fixtures/**"],
   "rootDir": ".",
   "compilerOptions": {
     "esModuleInterop": true,
