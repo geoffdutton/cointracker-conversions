@@ -20,7 +20,6 @@ test('starts new conversion manager', async () => {
   expect(await main({ _: ['some/file.csv'] })).toBe(0)
   expect(_convMgr).toHaveBeenCalledWith({
     fileToConvert: 'some/file.csv',
-    sourceExchange: 'blockchain.com',
     outputDir: OUTPUT_DIR
   })
   expect(_convMgr.__mockStart).toHaveBeenCalledTimes(1)
