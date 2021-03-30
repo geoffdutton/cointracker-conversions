@@ -9,7 +9,6 @@ export default async (rawArgs: CliArgumentsRaw): Promise<number> => {
     console.log({ args })
     const manager = createConversionManager({
       fileToConvert: args.fileToConvert,
-      sourceExchange: 'blockchain.com',
       outputDir: OUTPUT_DIR
     })
     await manager.start()

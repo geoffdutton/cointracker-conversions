@@ -8,6 +8,7 @@ import {
 } from './CoinTrackerTransaction'
 import { OUTPUT_DIR } from '../constants'
 import { Stream } from 'stream'
+import ConvertibleCsvStream from './ConvertibleCsvStream'
 
 export interface ConvertibleCsvOptions {
   sourceFileName: string
@@ -40,8 +41,35 @@ export abstract class ConvertibleCsv {
     this.outputStream.pipe(writeStream)
   }
 
-  abstract convert(): Promise<void>
-  abstract processRow(row: CsvRow): Promise<CoinTrackerTransaction>
+  abstract processRow(row: CsvRow): CoinTrackerTransaction | null
+
+  convert(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const stream = new ConvertibleCsvStream(this.sourceFileName)
+      stream
+        .on('data', async (row) => {
+          try {
+            const camelCasedRow = Object.keys(row).reduce(
+              (camelCased: CsvRow, key) => {
+                camelCased[this.toCamelCase(key)] = row[key]
+                return camelCased
+              },
+              {}
+            )
+            const trx = this.processRow(camelCasedRow)
+            trx && this.writeTransactionRow(trx)
+          } catch (e) {
+            reject(e)
+          }
+        })
+        .on('error', (err) => reject(err))
+        .on('end', () => {
+          this.outputStream.end(() => resolve())
+        })
+
+      stream.init()
+    })
+  }
 
   protected writeTransactionRow(row: CoinTrackerTransaction): void {
     this.outputStream.write({
@@ -54,6 +82,17 @@ export abstract class ConvertibleCsv {
       'Fee Currency': row.feeCurrency,
       Tag: row.tag
     })
+  }
+
+  protected toCamelCase(key: string): string {
+    return key
+      .replace(/\s(.)/g, function ($1) {
+        return $1.toUpperCase()
+      })
+      .replace(/\s/g, '')
+      .replace(/^(.)/, function ($1) {
+        return $1.toLowerCase()
+      })
   }
 
   protected parseNumber(numberLike: string): number | null {
@@ -69,6 +108,10 @@ export abstract class ConvertibleCsv {
     }
 
     return isNaN(returnNumber) ? null : returnNumber
+  }
+
+  protected parseAbsoluteValueOrZero(numberLike: string): number {
+    return Math.abs(this.parseNumber(numberLike) ?? 0)
   }
 }
 

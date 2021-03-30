@@ -1,25 +1,20 @@
-import { VALID_EXCHANGE } from './types'
 import fs from 'fs'
 import createCliQuestionnaire, {
   CliQuestionnaire
 } from './models/CliQuestionnaire'
 import { BlockchainDotComCsv } from './models/BlockchainDotComCsv'
 import { ConvertibleCsv } from './models/ConvertibleCsv'
+import { BlockFiCsv } from './models/BlockFiCsv'
 
 export interface ConversionManagerOptions {
   fileToConvert: string
-  sourceExchange: VALID_EXCHANGE
   outputDir: string
 }
 
 const TIMEZONE = 'America/Chicago'
 export class ConversionManager {
   private readonly questionnaire: CliQuestionnaire
-  constructor(
-    private fileToConvert: string,
-    private sourceExchange: string,
-    private outputDir: string
-  ) {
+  constructor(private fileToConvert: string, private outputDir: string) {
     this.questionnaire = createCliQuestionnaire()
   }
 
@@ -27,16 +22,18 @@ export class ConversionManager {
     if (!fs.existsSync(this.outputDir)) {
       await fs.promises.mkdir(this.outputDir)
     }
-    console.log(this.fileToConvert, this.sourceExchange)
     await this.questionnaire.askWhatExchange()
     const exchange = this.questionnaire.getSourceExchange()
     console.log('Selected exchange:', exchange)
-
+    console.log('Source CSV:', this.fileToConvert)
     let csvConverter: ConvertibleCsv | null = null
 
     switch (exchange) {
       case 'blockchain.com':
         csvConverter = new BlockchainDotComCsv(this.fileToConvert, TIMEZONE)
+        break
+      case 'BlockFi':
+        csvConverter = new BlockFiCsv(this.fileToConvert, TIMEZONE)
         break
     }
 
@@ -50,9 +47,5 @@ export class ConversionManager {
 export default function createConversionManager(
   opts: ConversionManagerOptions
 ): ConversionManager {
-  return new ConversionManager(
-    opts.fileToConvert,
-    opts.sourceExchange,
-    opts.outputDir
-  )
+  return new ConversionManager(opts.fileToConvert, opts.outputDir)
 }

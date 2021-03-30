@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon'
 import { ConvertibleCsv, CsvRow } from './ConvertibleCsv'
 import { VALID_EXCHANGE } from '../types'
-import ConvertibleCsvStream from './ConvertibleCsvStream'
 import { CoinTrackerTransaction } from './CoinTrackerTransaction'
 
 export interface BlockchainDotComCsvRow extends CsvRow {
@@ -21,27 +20,6 @@ export class BlockchainDotComCsv extends ConvertibleCsv {
     super(sourceFileName, BlockchainDotComCsv.exchangeName, timezone)
   }
 
-  convert(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const stream = new ConvertibleCsvStream(this.sourceFileName)
-      stream
-        .on('data', async (row) => {
-          try {
-            const trx = await this.processRow(row)
-            this.writeTransactionRow(trx)
-          } catch (e) {
-            reject(e)
-          }
-        })
-        .on('error', (err) => reject(err))
-        .on('end', () => {
-          this.outputStream.end(() => resolve())
-        })
-
-      stream.init()
-    })
-  }
-
   getDate(row: BlockchainDotComCsvRow): string {
     const jsDate = new Date(`${row.date} ${row.time}`)
     const d = DateTime.utc(
@@ -55,18 +33,7 @@ export class BlockchainDotComCsv extends ConvertibleCsv {
     return d.toFormat('LL/dd/yyyy HH:mm:ss')
   }
 
-  protected parseNumber(numberLike: string): number {
-    const number = super.parseNumber(numberLike)
-    if (!number) {
-      return 0
-    }
-
-    return Math.abs(number)
-  }
-
-  async processRow(
-    row: BlockchainDotComCsvRow
-  ): Promise<CoinTrackerTransaction> {
+  processRow(row: BlockchainDotComCsvRow): CoinTrackerTransaction {
     const trx: CoinTrackerTransaction = {
       date: this.getDate(row)
     }
@@ -74,15 +41,15 @@ export class BlockchainDotComCsv extends ConvertibleCsv {
     const type = row.type
     if (type === 'sent') {
       trx.sentCurrency = row.token
-      trx.sentQuantity = this.parseNumber(row.amount)
+      trx.sentQuantity = this.parseAbsoluteValueOrZero(row.amount)
     } else if (type === 'received') {
       trx.receivedCurrency = row.token
-      trx.receivedQuantity = this.parseNumber(row.amount)
+      trx.receivedQuantity = this.parseAbsoluteValueOrZero(row.amount)
     } else {
       console.log(trx)
       throw new Error(`Unexpected transaction type: ${type}`)
     }
-    console.log(trx)
+
     return trx
   }
 }
