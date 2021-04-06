@@ -23,6 +23,7 @@
     "start": "tsc --watch",
     "test": "npm run lint && jest --coverage --runInBand",
     "test:watch": "jest --watch",
+    "format": "prettier --loglevel=warn -w '*.{js,ts,md}' package.json src bin",
     "lint": "npm run buildtest && eslint --fix *.js src bin",
     "preversion": "npm run lint && npm run build && npm test",
     "postversion": "git push && git push --tags && npm publish",
@@ -66,6 +67,6 @@
   },
   "lint-staged": {
     "*.{js,ts}": "eslint --fix",
-    "*.{js,ts,json,rd}": "prettier -w"
+    "*.{js,ts,md}": "prettier -w"
   }
 }
