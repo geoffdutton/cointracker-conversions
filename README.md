@@ -17,7 +17,7 @@ An unofficial [cointracker.io](https://www.cointracker.io/) transaction and trad
 
 ```bash
 npm i -g cointracker-conversions
-convert-cointracker ~/Desktop/file_from_exchange.csv
+cointrackerize ~/Desktop/file_from_exchange.csv
 ```
 
 That will output to `~/Desktop/file_from_exchange_contrackered.csv` which is ready to be imported to CoinTracker.io!

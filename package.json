@@ -4,7 +4,7 @@
   "description": "CLI tool for converting transaction and trade history exports from various exchanges into the proper CoinTracker.io format",
   "main": "dist/index.js",
   "bin": {
-    "convert-cointracker": "./bin/cli.js"
+    "cointrackerize": "./bin/cli.js"
   },
   "files": [
     "package.json",
