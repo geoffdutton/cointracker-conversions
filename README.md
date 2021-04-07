@@ -4,6 +4,7 @@
 
 ![npm](https://img.shields.io/npm/v/cointracker-conversions)
 [![Node.js CI](https://github.com/geoffdutton/cointracker-conversions/actions/workflows/node.js.yml/badge.svg)](https://github.com/geoffdutton/cointracker-conversions/actions/workflows/node.js.yml)
+[![codecov](https://codecov.io/gh/geoffdutton/cointracker-conversions/branch/main/graph/badge.svg?token=rlMwZAN5TP)](https://codecov.io/gh/geoffdutton/cointracker-conversions)
 
 ## Getting started
 
