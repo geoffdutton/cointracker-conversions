@@ -32,11 +32,35 @@ export interface FixtureMockStreams {
   restore: () => void
 }
 
+const setupMockWriteStream = (): Omit<
+  FixtureMockStreams,
+  'mockFsCreateReadStream'
+> => {
+  const chunksWritten: string[] = []
+  const writeStream = new PassThrough()
+  fs.createWriteStream = jest.fn()
+  const mockFsCreateWriteStream = fs.createWriteStream as jest.Mock
+  mockFsCreateWriteStream.mockImplementation(() => {
+    writeStream.write = jest.fn((chunk?, cb?) => {
+      chunksWritten.push(Buffer.from(chunk).toString('utf8').trim())
+      cb && cb(null)
+    }) as jest.Mock
+    return writeStream
+  })
+  return {
+    chunksWritten,
+    mockFsCreateWriteStream,
+    restore() {
+      fs.createReadStream = origFs.createReadStream
+      fs.createWriteStream = origFs.createWriteStream
+    }
+  }
+}
+
 const setupMockStreams = (
   sourceCsv: string,
   errorSourceFile?: string
 ): FixtureMockStreams => {
-  const chunksWritten: string[] = []
   fs.createReadStream = jest.fn()
   const mockFsCreateReadStream = fs.createReadStream as jest.Mock
   mockFsCreateReadStream.mockImplementation((fileName: string) => {
@@ -50,21 +74,12 @@ const setupMockStreams = (
     return stream
   })
 
-  const writeStream = new PassThrough()
-  fs.createWriteStream = jest.fn()
-  const mockFsCreateWriteStream = fs.createWriteStream as jest.Mock
-  mockFsCreateWriteStream.mockImplementation(() => {
-    writeStream.write = jest.fn((chunk?, cb?) => {
-      chunksWritten.push(Buffer.from(chunk).toString('utf8').trim())
-      cb && cb(null)
-    }) as jest.Mock
-    return writeStream
-  })
+  const writeMock = setupMockWriteStream()
 
   return {
-    chunksWritten,
+    chunksWritten: writeMock.chunksWritten,
     mockFsCreateReadStream,
-    mockFsCreateWriteStream,
+    mockFsCreateWriteStream: writeMock.mockFsCreateWriteStream,
     restore() {
       fs.createReadStream = origFs.createReadStream
       fs.createWriteStream = origFs.createWriteStream
@@ -74,5 +89,6 @@ const setupMockStreams = (
 
 export default {
   loadFixture,
-  setupMockStreams
+  setupMockStreams,
+  setupMockWriteStream
 }

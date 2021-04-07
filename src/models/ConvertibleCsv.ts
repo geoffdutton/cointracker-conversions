@@ -33,7 +33,9 @@ export abstract class ConvertibleCsv {
   ) {
     const baseFilename = path.basename(this.sourceFileName)
     const outputFileName = path.resolve(
-      OUTPUT_DIR,
+      process.env.NODE_ENV === 'test'
+        ? OUTPUT_DIR
+        : path.dirname(this.sourceFileName),
       baseFilename.replace('.csv', '_contrackered.csv')
     )
     const writeStream = fs.createWriteStream(outputFileName)
