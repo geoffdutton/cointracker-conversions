@@ -11,6 +11,7 @@ An unofficial [cointracker.io](https://www.cointracker.io/) transaction and trad
 - [x] BlockFi
 - [x] Blockchain.com
 - [x] Gate.io
+- [ ] next ??
 
 ## Getting started
 
