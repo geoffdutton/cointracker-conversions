@@ -5,8 +5,10 @@ import { OUTPUT_DIR } from './constants'
 export default async (rawArgs: CliArgumentsRaw): Promise<number> => {
   try {
     const args = argsParser(rawArgs)
+    if (!args) {
+      return 0
+    }
 
-    console.log({ args })
     const manager = createConversionManager({
       fileToConvert: args.fileToConvert,
       outputDir: OUTPUT_DIR

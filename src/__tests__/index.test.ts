@@ -11,16 +11,26 @@ interface MockCreateConversionManager {
 
 jest.mock('../ConversionManager')
 
-test('returns 1 to indicate error', async () => {
-  expect(await main({ _: [] })).toBe(1)
-})
+describe('main', () => {
+  const mockedCreate = createConversionManager as MockCreateConversionManager
 
-test('starts new conversion manager', async () => {
-  const _convMgr = createConversionManager as MockCreateConversionManager
-  expect(await main({ _: ['some/file.csv'] })).toBe(0)
-  expect(_convMgr).toHaveBeenCalledWith({
-    fileToConvert: 'some/file.csv',
-    outputDir: OUTPUT_DIR
+  afterEach(() => mockedCreate.__mockStart.mockClear())
+
+  test('returns 0 on help', async () => {
+    expect(await main({ _: [] })).toBe(0)
   })
-  expect(_convMgr.__mockStart).toHaveBeenCalledTimes(1)
+
+  test('returns 1 on error', async () => {
+    mockedCreate.__mockStart.mockRejectedValueOnce(new Error('bad csv :('))
+    expect(await main({ _: ['some/file.csv'] })).toBe(1)
+  })
+
+  test('starts new conversion manager', async () => {
+    expect(await main({ _: ['some/file.csv'] })).toBe(0)
+    expect(mockedCreate).toHaveBeenCalledWith({
+      fileToConvert: 'some/file.csv',
+      outputDir: OUTPUT_DIR
+    })
+    expect(mockedCreate.__mockStart).toHaveBeenCalledTimes(1)
+  })
 })
