@@ -1,3 +1,4 @@
+import { GateDotIOCsv } from './models/GateDotIO'
 import fs from 'fs'
 import createCliQuestionnaire, {
   CliQuestionnaire
@@ -34,6 +35,9 @@ export class ConversionManager {
         break
       case 'BlockFi':
         csvConverter = new BlockFiCsv(this.fileToConvert, TIMEZONE)
+        break
+      case 'gate.io':
+        csvConverter = new GateDotIOCsv(this.fileToConvert, TIMEZONE)
         break
     }
 

@@ -4,37 +4,16 @@
 
 ## Getting started
 
-**Click the "Use this template" button.**
-
-Alternatively, create a new directory and then run:
-
-```
-$ curl -fsSL https://github.com/sam-parsons/ts-node-cli-boilerplate/archive/main.tar.gz | tar -xz --strip-components=1
-```
-
-## Usage
-
-local development
-
 ```bash
-// creates sym-link in global node_modules folder,
-// pointing to the local repo
-$ npm link
-
-// we can now immediately invoke the package globally
-$ your-package arg1 arg2
-
-// run typescript compilation to update global command
-$ npm run build
-// -- OR --
-// or run start script to watch file changes
-$ npm start
+npm i
+node run build
+node cli/bin.hjs ~/Desktop/file_from_exchange.csv
 ```
 
-as a remote dependency (after publishing package on NPM)
+That will output to `output/file_from_exchange_contrackered.csv`
 
-```bash
-$ npm install --global your-package
+## Supported Exchanges
 
-$ your-package arg1 arg2
-```
+- [x] BlockFi
+- [x] Blockchain.com
+- [ ] Gate.io

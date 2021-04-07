@@ -31,8 +31,8 @@ describe('BlockFi', () => {
       Array [
         "Date,Received Quantity,Received Currency,Sent Quantity,Sent Currency,Fee Amount,Fee Currency,Tag",
         "03/04/2021 07:27:35,60.51863375,LINK,,,,,",
-        "02/28/2021 17:59:59,0.0632184,ETH,,,,,Interest",
-        "02/28/2021 17:59:59,136.62968829,USDC,,,,,Interest",
+        "02/28/2021 17:59:59,0.0632184,ETH,,,,,staked",
+        "02/28/2021 17:59:59,136.62968829,USDC,,,,,staked",
         "02/25/2021 13:38:10,,,4500,USDC,0.25,USDC,",
       ]
     `)
