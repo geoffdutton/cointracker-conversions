@@ -27,7 +27,8 @@
     "test:watch": "jest --watch",
     "format": "prettier --loglevel=warn -w '*.{js,ts,md}' package.json src bin",
     "lint": "npm run buildtest && eslint --fix *.js src bin",
-    "preversion": "npm run lint && npm run build && npm test",
+    "preversion": "npm test && npm run build",
+    "prepublishOnly": "npm run build",
     "postversion": "git push && git push --tags && npm publish",
     "exec": "./bin/cli.js",
     "prepare": "husky install"
