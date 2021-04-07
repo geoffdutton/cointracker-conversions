@@ -13,6 +13,12 @@ export interface BlockFiCsvRow extends CsvRow {
     | 'Withdrawal Fee'
   amount: string
   cryptocurrency: string
+  // for trade history
+  date: string
+  buyQuantity: string
+  buyCurrency: string
+  soldQuantity: string
+  soldCurrency: string
 }
 
 export class BlockFiCsv extends ConvertibleCsv {
@@ -25,7 +31,7 @@ export class BlockFiCsv extends ConvertibleCsv {
   }
 
   getDate(row: BlockFiCsvRow): string {
-    const jsDate = new Date(`${row.confirmedAt} UTC`)
+    const jsDate = new Date(`${row.confirmedAt || row.date} UTC`)
     const d = DateTime.utc(
       jsDate.getUTCFullYear(),
       jsDate.getUTCMonth() + 1,
@@ -40,6 +46,15 @@ export class BlockFiCsv extends ConvertibleCsv {
   processRow(row: BlockFiCsvRow): CoinTrackerTransaction | null {
     const trx: CoinTrackerTransaction = {
       date: this.getDate(row)
+    }
+
+    // trade history
+    if (row.buyCurrency) {
+      trx.sentQuantity = this.parseAbsoluteValueOrZero(row.soldQuantity)
+      trx.sentCurrency = row.soldCurrency.toUpperCase()
+      trx.receivedQuantity = this.parseAbsoluteValueOrZero(row.buyQuantity)
+      trx.receivedCurrency = row.buyCurrency.toUpperCase()
+      return trx
     }
 
     const type = row.transactionType
