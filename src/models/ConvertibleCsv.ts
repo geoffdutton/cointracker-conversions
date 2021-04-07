@@ -67,7 +67,7 @@ export abstract class ConvertibleCsv {
           this.outputStream.end(() => resolve())
         })
 
-      stream.init()
+      stream.init(this.sourceExchange)
     })
   }
 

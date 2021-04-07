@@ -11,11 +11,18 @@ const origFs = {
 
 const fixtureMap: { [key in VALID_EXCHANGE]: string } = {
   BlockFi: 'blockFi.csv',
-  'blockchain.com': 'blockchain.com.csv'
+  'blockchain.com': 'blockchain.com.csv',
+  'gate.io': 'mydeposits_gate.io.csv'
 }
 
-const loadFixture = (exchange: VALID_EXCHANGE): string => {
-  return fs.readFileSync(path.resolve(__dirname, fixtureMap[exchange]), 'utf8')
+const loadFixture = (
+  exchange: VALID_EXCHANGE,
+  encoding: 'utf8' | 'utf16le' = 'utf8'
+): string => {
+  return fs.readFileSync(
+    path.resolve(__dirname, fixtureMap[exchange]),
+    encoding
+  )
 }
 
 export interface FixtureMockStreams {

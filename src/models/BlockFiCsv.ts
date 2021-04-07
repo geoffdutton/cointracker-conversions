@@ -66,7 +66,8 @@ export class BlockFiCsv extends ConvertibleCsv {
       trx.receivedCurrency = row.cryptocurrency
       trx.receivedQuantity = this.parseAbsoluteValueOrZero(row.amount)
       if (type === 'Interest Payment') {
-        trx.tag = 'Interest'
+        // Temp until they add 'interest' tag
+        trx.tag = 'staked'
       }
     }
 
