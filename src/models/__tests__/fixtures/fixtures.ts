@@ -6,7 +6,8 @@ import { PassThrough } from 'stream'
 
 const origFs = {
   createReadStream: fs.createReadStream,
-  createWriteStream: fs.createWriteStream
+  createWriteStream: fs.createWriteStream,
+  existsSync: fs.existsSync
 }
 
 const fixtureMap: { [key in VALID_EXCHANGE]: string } = {
@@ -27,15 +28,19 @@ const loadFixture = (
 
 export interface FixtureMockStreams {
   chunksWritten: string[]
-  mockFsCreateReadStream: jest.Mock
+  mockFsCreateReadStream?: jest.Mock
   mockFsCreateWriteStream: jest.Mock
+  mockFsExistsSync: jest.Mock
   restore: () => void
 }
 
-const setupMockWriteStream = (): Omit<
-  FixtureMockStreams,
-  'mockFsCreateReadStream'
-> => {
+const restore = () => {
+  fs.createReadStream = origFs.createReadStream
+  fs.createWriteStream = origFs.createWriteStream
+  fs.existsSync = origFs.existsSync
+}
+
+const setupMockWriteStream = (): FixtureMockStreams => {
   const chunksWritten: string[] = []
   const writeStream = new PassThrough()
   fs.createWriteStream = jest.fn()
@@ -47,20 +52,21 @@ const setupMockWriteStream = (): Omit<
     }) as jest.Mock
     return writeStream
   })
+
+  fs.existsSync = jest.fn(() => true)
+  const mockFsExistsSync = fs.existsSync as jest.Mock
   return {
     chunksWritten,
     mockFsCreateWriteStream,
-    restore() {
-      fs.createReadStream = origFs.createReadStream
-      fs.createWriteStream = origFs.createWriteStream
-    }
+    mockFsExistsSync,
+    restore
   }
 }
 
 const setupMockStreams = (
   sourceCsv: string,
   errorSourceFile?: string
-): FixtureMockStreams => {
+): Required<FixtureMockStreams> => {
   fs.createReadStream = jest.fn()
   const mockFsCreateReadStream = fs.createReadStream as jest.Mock
   mockFsCreateReadStream.mockImplementation((fileName: string) => {
@@ -77,13 +83,8 @@ const setupMockStreams = (
   const writeMock = setupMockWriteStream()
 
   return {
-    chunksWritten: writeMock.chunksWritten,
     mockFsCreateReadStream,
-    mockFsCreateWriteStream: writeMock.mockFsCreateWriteStream,
-    restore() {
-      fs.createReadStream = origFs.createReadStream
-      fs.createWriteStream = origFs.createWriteStream
-    }
+    ...writeMock
   }
 }
 

@@ -1,7 +1,8 @@
+import chalk from 'chalk'
 const version = require('../package.json').version
 
 const HELP_MESSAGE = `
-cointrackerize - v${version}
+${chalk.underline('cointrackerize - v' + version)}
 
 Convert your crypto exchange exports into CoinTracker.io format.
 
@@ -17,9 +18,16 @@ export interface CliArguments {
 
 export interface CliArgumentsRaw {
   _: string[]
+  h?: boolean
+  help?: boolean
 }
 
 export default function (rawArgs: CliArgumentsRaw): CliArguments | null {
+  if (rawArgs.help || rawArgs.h) {
+    console.log(HELP_MESSAGE)
+    return null
+  }
+
   const fileName = rawArgs._[0]
   if (!fileName) {
     console.log(HELP_MESSAGE)

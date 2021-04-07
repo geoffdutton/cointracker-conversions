@@ -23,6 +23,11 @@ export class ConversionManager {
     if (!fs.existsSync(this.outputDir)) {
       await fs.promises.mkdir(this.outputDir)
     }
+
+    if (!fs.existsSync(this.fileToConvert)) {
+      throw new Error(`Passed file does not exist:\nx ${this.fileToConvert}`)
+    }
+
     await this.questionnaire.askWhatExchange()
     const exchange = this.questionnaire.getSourceExchange()
     console.log('Selected exchange:', exchange)

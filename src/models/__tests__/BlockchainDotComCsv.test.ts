@@ -99,6 +99,7 @@ describe('blockchain.com', () => {
       )
 
       await testee.convert()
+      expect(mocks.mockFsExistsSync).toHaveBeenCalledWith(sourceFile)
       expect(mocks.mockFsCreateReadStream).toHaveBeenCalledWith(sourceFile)
       expect(mocks.mockFsCreateWriteStream).toHaveBeenCalledWith(
         path.resolve(OUTPUT_DIR, 'file_contrackered.csv')
@@ -125,6 +126,14 @@ describe('blockchain.com', () => {
         "10/13/2020 23:25:04,0.00741481,BTC,,,,,",
       ]
     `)
+    })
+
+    test('missing file error', async () => {
+      mocks.mockFsExistsSync.mockReturnValue(false)
+      testee = new BlockchainDotComCsv(sourceFile, timezone)
+      await expect(testee.convert()).rejects.toThrowError(
+        `Passed file does not exist:\nx ${sourceFile}`
+      )
     })
 
     test('csv error', async () => {
