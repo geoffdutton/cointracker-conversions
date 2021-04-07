@@ -2,6 +2,8 @@
 
 > Unofficial [cointracker.io](https://www.cointracker.io/) transaction and trade history converter.
 
+[![Node.js CI](https://github.com/geoffdutton/cointracker-conversions/actions/workflows/node.js.yml/badge.svg)](https://github.com/geoffdutton/cointracker-conversions/actions/workflows/node.js.yml)
+
 ## Getting started
 
 ```bash
@@ -16,4 +18,4 @@ That will output to `output/file_from_exchange_contrackered.csv`
 
 - [x] BlockFi
 - [x] Blockchain.com
-- [ ] Gate.io
+- [x] Gate.io

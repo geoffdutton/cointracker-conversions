@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "CLI tool for converting transaction and trade history exports from various exchanges into the proper CoinTracker.io format",
   "main": "dist/index.js",
-  "bin": "bin/cli.js",
+  "bin": {
+    "convert-cointracker": "./bin/cli.js"
+  },
   "files": [
     "package.json",
     "dist/",
