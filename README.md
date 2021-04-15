@@ -3,6 +3,7 @@
 ![npm](https://img.shields.io/npm/v/cointracker-conversions)
 [![Node.js CI](https://github.com/geoffdutton/cointracker-conversions/actions/workflows/node.js.yml/badge.svg)](https://github.com/geoffdutton/cointracker-conversions/actions/workflows/node.js.yml)
 [![codecov](https://codecov.io/gh/geoffdutton/cointracker-conversions/branch/main/graph/badge.svg?token=rlMwZAN5TP)](https://codecov.io/gh/geoffdutton/cointracker-conversions)
+[![Known Vulnerabilities](https://snyk.io/test/github/geoffdutton/cointracker-conversions/badge.svg)](https://snyk.io/test/github/geoffdutton/cointracker-conversions)
 
 An unofficial [cointracker.io](https://www.cointracker.io/) transaction and trade history converter.
 

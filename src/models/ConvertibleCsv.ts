@@ -25,27 +25,32 @@ interface OutputStream extends Stream {
 }
 
 export abstract class ConvertibleCsv {
-  protected outputStream: OutputStream
+  protected outputStream?: OutputStream
+  protected outputFileName: string
   protected constructor(
     protected sourceFileName: string,
     protected sourceExchange: VALID_EXCHANGE,
     protected timezone: string
   ) {
     const baseFilename = path.basename(this.sourceFileName)
-    const outputFileName = path.resolve(
+    this.outputFileName = path.resolve(
       process.env.NODE_ENV === 'test'
         ? OUTPUT_DIR
         : path.dirname(this.sourceFileName),
       baseFilename.replace('.csv', '_contrackered.csv')
     )
-    const writeStream = fs.createWriteStream(outputFileName)
-    this.outputStream = format({ headers: true })
-    this.outputStream.pipe(writeStream)
   }
 
   abstract processRow(row: CsvRow): CoinTrackerTransaction | null
 
-  convert(): Promise<void> {
+  async convert(): Promise<void> {
+    if (!fs.existsSync(this.sourceFileName)) {
+      throw new Error(`Passed file does not exist:\nx ${this.sourceFileName}`)
+    }
+    const writeStream = fs.createWriteStream(this.outputFileName)
+    this.outputStream = format({ headers: true })
+    this.outputStream.pipe(writeStream)
+
     return new Promise((resolve, reject) => {
       const stream = new ConvertibleCsvStream(this.sourceFileName)
       stream
@@ -66,6 +71,9 @@ export abstract class ConvertibleCsv {
         })
         .on('error', (err) => reject(err))
         .on('end', () => {
+          if (!this.outputStream) {
+            return resolve()
+          }
           this.outputStream.end(() => resolve())
         })
 
@@ -74,7 +82,7 @@ export abstract class ConvertibleCsv {
   }
 
   protected writeTransactionRow(row: CoinTrackerTransaction): void {
-    this.outputStream.write({
+    this.outputStream?.write({
       Date: row.date,
       'Received Quantity': row.receivedQuantity,
       'Received Currency': row.receivedCurrency,

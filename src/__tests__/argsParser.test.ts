@@ -8,14 +8,21 @@ describe('Main CLI Arguments Parser', () => {
     }
   })
 
-  test('throws error if missing file', () => {
-    expect(() => argsParser(args)).toThrowError('Missing file to convert')
+  test('shows help', () => {
+    expect(argsParser(args)).toBe(null)
+  })
+
+  test('shows help with -h', () => {
+    args.h = true
+    expect(argsParser(args)).toBe(null)
+    args.help = true
+    expect(argsParser(args)).toBe(null)
   })
 
   test('returns with resolved file path', () => {
     const fileName = 'some/file/toConvert.csv'
     args._.push(fileName)
-    expect<CliArguments>(argsParser(args)).toEqual({
+    expect<CliArguments | null>(argsParser(args)).toEqual({
       fileToConvert: fileName
     })
   })

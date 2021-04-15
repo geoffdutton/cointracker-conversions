@@ -1,28 +1,16 @@
 import { GateDotIOCsv } from '../GateDotIO'
 import path from 'path'
 import { OUTPUT_DIR } from '../../constants'
-import { PassThrough } from 'stream'
-import fs from 'fs'
+import fixtures, { FixtureMockStreams } from './fixtures/fixtures'
 const exchange = 'gate.io'
 
 describe(exchange, () => {
   const timezone = 'America/Chicago'
   let testee: GateDotIOCsv
-  let chunksWritten: string[]
-  let mockFsCreateWriteStream: jest.Mock
+  let mocks: FixtureMockStreams
 
   beforeEach(() => {
-    chunksWritten = []
-    const writeStream = new PassThrough()
-    fs.createWriteStream = jest.fn()
-    mockFsCreateWriteStream = fs.createWriteStream as jest.Mock
-    mockFsCreateWriteStream.mockImplementation(() => {
-      writeStream.write = jest.fn((chunk?, cb?) => {
-        chunksWritten.push(Buffer.from(chunk).toString('utf8').trim())
-        cb && cb(null)
-      }) as jest.Mock
-      return writeStream
-    })
+    mocks = fixtures.setupMockWriteStream()
   })
 
   test('deposits', async () => {
@@ -33,11 +21,11 @@ describe(exchange, () => {
     )
     testee = new GateDotIOCsv(sourceFile, timezone)
     await testee.convert()
-    expect(mockFsCreateWriteStream).toHaveBeenCalledWith(
+    expect(mocks.mockFsCreateWriteStream).toHaveBeenCalledWith(
       path.resolve(OUTPUT_DIR, 'mydeposits_gate.io_contrackered.csv')
     )
-    expect(chunksWritten.length).toBe(5)
-    expect(chunksWritten).toMatchInlineSnapshot(`
+    expect(mocks.chunksWritten.length).toBe(5)
+    expect(mocks.chunksWritten).toMatchInlineSnapshot(`
       Array [
         "Date,Received Quantity,Received Currency,Sent Quantity,Sent Currency,Fee Amount,Fee Currency,Tag",
         "04/05/2021 06:28:03,34.79281332,LTC,,,,,",
@@ -56,11 +44,11 @@ describe(exchange, () => {
     )
     testee = new GateDotIOCsv(sourceFile, timezone)
     await testee.convert()
-    expect(mockFsCreateWriteStream).toHaveBeenCalledWith(
+    expect(mocks.mockFsCreateWriteStream).toHaveBeenCalledWith(
       path.resolve(OUTPUT_DIR, 'mytradehistory_gate.io_contrackered.csv')
     )
-    expect(chunksWritten.length).toBe(7)
-    expect(chunksWritten).toMatchInlineSnapshot(`
+    expect(mocks.chunksWritten.length).toBe(7)
+    expect(mocks.chunksWritten).toMatchInlineSnapshot(`
       Array [
         "Date,Received Quantity,Received Currency,Sent Quantity,Sent Currency,Fee Amount,Fee Currency,Tag",
         "04/05/2021 06:32:54,2128,ADA,1.011,USDT,,,",
@@ -81,11 +69,11 @@ describe(exchange, () => {
     )
     testee = new GateDotIOCsv(sourceFile, timezone)
     await testee.convert()
-    expect(mockFsCreateWriteStream).toHaveBeenCalledWith(
+    expect(mocks.mockFsCreateWriteStream).toHaveBeenCalledWith(
       path.resolve(OUTPUT_DIR, 'mywithdrawals_gate.io_contrackered.csv')
     )
-    expect(chunksWritten.length).toBe(5)
-    expect(chunksWritten).toMatchInlineSnapshot(`
+    expect(mocks.chunksWritten.length).toBe(5)
+    expect(mocks.chunksWritten).toMatchInlineSnapshot(`
       Array [
         "Date,Received Quantity,Received Currency,Sent Quantity,Sent Currency,Fee Amount,Fee Currency,Tag",
         "04/05/2021 06:40:59,,,333.9964,DOT,,,",
