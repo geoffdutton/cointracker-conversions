@@ -64,7 +64,7 @@
   "dependencies": {
     "@fast-csv/format": "^4.3.5",
     "@fast-csv/parse": "^4.3.6",
-    "luxon": "^1.27.0",
+    "luxon": "^1.28.1",
     "minimist": "^1.2.5",
     "prompts": "^2.4.1"
   },
